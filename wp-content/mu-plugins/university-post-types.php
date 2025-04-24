@@ -1,9 +1,11 @@
 <?php
-function university_Post_types() {
+function university_post_types() {
+    // Events post type
     register_post_type('event', array(
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'excerpt', 'thumbnail'),
         'has_archive' => true,
         'rewrite' => array('slug' => 'events'),
-        'supports' => array('title', 'editor', 'excerpt', 'thumbnail'),
         'public' => true,
         'labels' => array(
             'name' => 'Events',
@@ -14,5 +16,37 @@ function university_Post_types() {
         ),
         'menu_icon' => 'dashicons-calendar'
     ));
+
+    // Program post type
+    register_post_type('program', array(
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor'),
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'programs'),
+        'public' => true,
+        'labels' => array(
+            'name' => 'Programs',
+            'add_new_item' => 'Add New Program',
+            'edit_item' => 'Edit Program',
+            'all_items' => 'All Programs',
+            'singular_name' => 'Program'
+        ),
+        'menu_icon' => 'dashicons-awards'
+    ));
+
+    //professor post type
+    register_post_type('professor', array(
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'thumbnail'),
+        'public' => true,
+        'labels' => array(
+            'name' => 'Professors',
+            'add_new_item' => 'Add New Professor',
+            'edit_item' => 'Edit Professor',
+            'all_items' => 'All Professors',
+            'singular_name' => 'Professor'
+        ),
+        'menu_icon' => 'dashicons-businessman'
+    ));
 }
-add_action('init', 'university_Post_types');
+add_action('init', 'university_post_types');
