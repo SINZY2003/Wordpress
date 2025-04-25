@@ -3,16 +3,9 @@
 get_header();
 
 while (have_posts()) {
-    the_post(); ?>
-       <div class="page-banner">
-<div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg') ?>);"></div>
-<div class="page-banner__content container container--narrow">
-  <h1 class="page-banner__title"><?php the_title(); ?></h1>
-  <div class="page-banner__intro">
-    <p>DON'T FORGET TO REPLACE ME LATER</p>
-  </div>
-</div>  
-</div>
+    the_post(); 
+    pageBanner();
+    ?>
 
 <div class="container container--narrow page-section">
 <div class="metabox metabox--position-up metabox--with-home-link">
@@ -34,7 +27,7 @@ while (have_posts()) {
         )
       )));
       if ($relatedProfessors->have_posts()) {
-          echo '<h2 class="headline headline--medium">Professors Teaching <?php the_title(); ?></h2>';
+          echo '<h2 class="headline headline--medium">Professors Teaching ' . get_the_title() . '</h2>';
 
           echo '<ul class="professor-cards">';
 
@@ -71,18 +64,25 @@ while (have_posts()) {
               'value' => '"' . get_the_ID() . '"'
           )
         )));
-        if ($today->have_posts()) { ?>
-          <hr class="section-break">
-          <h2 class="headline headline--medium">Upcoming <?php the_title(); ?> Events</h2>
-          <ul class="link-list min-list">
-            <?php
+        if ($today->have_posts()) { 
+        echo '<hr class="section-break">';
+        echo '<h2 class="headline headline--medium">Upcoming '. get_the_title(). ' Events</h2>';
             while($today->have_posts()) { 
-                $today->the_post(); ?>
-                <li><a href="<?php the_permalink();?>"><?php the_title();?></a></li>
-            <?php }
-            ?>
-          </ul>
-        <?php }?>
+                $today->the_post();
+                get_template_part('template-parts/content-event');
+               }
+         }
+         wp_reset_postdata();
+         $relatedCampuses = get_field('related_campuses');
+          if ($relatedCampuses) { 
+          echo '<h2 class="headline headline--medium">' . get_the_title() . ' Campus(es)</h2>';
+          echo '<ul class="min-list link-list">';
+          foreach ($relatedCampuses as $campus) { ?>
+                <li><a href="<?php echo get_the_permalink($campus); ?>"><?php echo get_the_title($campus); ?></a></li>
+          <?php }
+          echo '</ul>';
+          }
+         ?>
 </div>
 
     <?php

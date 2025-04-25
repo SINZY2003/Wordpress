@@ -46,6 +46,11 @@ function University_features() {
 }
 add_action('after_setup_theme', 'University_features');
 add_action('pre_get_posts', 'University_adjust_queries');
+function universityMapKey($api) {
+    $api['key'] = 'AIzaSyBh9b1rNCp6k0i5JeMHiRP4klDymBeoEWk';
+    return $api;
+}
+add_filter('acf/fields/google_map/api', 'universityMapKey');
 function University_adjust_queries($query) {
     if (!is_admin() && is_post_type_archive('program') && $query->is_main_query()) {
         $query->set('orderby', 'title');
