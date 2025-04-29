@@ -37,7 +37,6 @@ while (have_posts()) {
                 <a class="professor-card" href="<?php the_permalink();?>">
                   <img class="professor-card__image" src="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'professorPortrait');?>" alt="">
                   <span class="professor-card__name"><?php the_title();?></span>
-
                 </a></li>
           <?php } 
           echo '</ul>';
