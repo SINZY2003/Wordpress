@@ -69,5 +69,38 @@ function university_post_types() {
         ),
         'menu_icon' => 'dashicons-businessman'
     ));
+
+     //Note post type
+     register_post_type('note', array(
+        'capability_type' => 'note',
+        'map_meta_cap' => true,
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor',),
+        'public' => false,
+        'show_ui' => true,
+        'labels' => array(
+            'name' => 'Notes',
+            'add_new_item' => 'Add New Notes',
+            'edit_item' => 'Edit Notes',
+            'all_items' => 'All Notes',
+            'singular_name' => 'Note'
+        ),
+        'menu_icon' => 'dashicons-sticky' // Use a different icon for notes
+    ));
+
+    //like post type
+    register_post_type('like', array(
+        'supports' => array('title',),
+        'public' => false,
+        'show_ui' => true,
+        'labels' => array(
+            'name' => 'Likes',
+            'add_new_item' => 'Add New Likes',
+            'edit_item' => 'Edit Likes',
+            'all_items' => 'All Likes',
+            'singular_name' => 'Like'
+        ),
+        'menu_icon' => 'dashicons-heart'
+    ));
 }
 add_action('init', 'university_post_types');
