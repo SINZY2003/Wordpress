@@ -102,5 +102,20 @@ function university_post_types() {
         ),
         'menu_icon' => 'dashicons-heart'
     ));
+
+    //rating post type
+    register_post_type('rating', array(
+        'supports' => array('title',),
+        'public' => false,
+        'show_ui' => true,
+        'labels' => array(
+            'name' => 'Ratings',
+            'add_new_item' => 'Add New Ratings',
+            'edit_item' => 'Edit Ratings',
+            'all_items' => 'All Ratings',
+            'singular_name' => 'Rating'
+        ),
+        'menu_icon' => 'dashicons-star-filled'
+    ));
 }
 add_action('init', 'university_post_types');

@@ -5998,9 +5998,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
 /* harmony import */ var _modules_Like__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/Like */ "./src/modules/Like.js");
+/* harmony import */ var _modules_StarRating__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/StarRating */ "./src/modules/StarRating.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -6013,6 +6015,7 @@ var heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]
 var search = new _modules_Search__WEBPACK_IMPORTED_MODULE_3__["default"]();
 var myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__["default"]();
 var like = new _modules_Like__WEBPACK_IMPORTED_MODULE_5__["default"]();
+var starRating = new _modules_StarRating__WEBPACK_IMPORTED_MODULE_6__["default"]();
 
 /***/ }),
 
@@ -6451,7 +6454,7 @@ class Search {
     <div class="search-overlay__top">
       <div class="container">
         <i class="fa fa-search search-overlay__icon" aria-hidden="true"></i>
-        <input type="text" class="search-term" placeholder="What are you looking for?" id="search-term">
+        <input type="text" class="search-term" placeholder="Search..." id="search-term">
         <i class="fa fa-window-close search-overlay__close" aria-hidden="true"></i>
       </div>
     </div>
@@ -6464,6 +6467,96 @@ class Search {
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);
+
+/***/ }),
+
+/***/ "./src/modules/StarRating.js":
+/*!***********************************!*\
+  !*** ./src/modules/StarRating.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ StarRating)
+/* harmony export */ });
+// Ensure universityData is available
+if (typeof universityData === 'undefined') {
+  console.error('universityData is not defined');
+}
+
+// Star Rating Functions
+function submitRating(professorId, rating) {
+  return fetch(`${universityData.root_url}/wp-json/university/v1/manageRating`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-WP-Nonce": universityData.nonce
+    },
+    body: JSON.stringify({
+      professorId,
+      rating
+    })
+  }).then(response => {
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.json();
+  });
+}
+
+// Initialize when DOM is ready
+function initStarRatings() {
+  document.querySelectorAll(".star-rating-box").forEach(box => {
+    const stars = box.querySelectorAll("i");
+    const professorId = box.dataset.professor;
+    let ratingId = box.dataset.ratingId || '';
+    let currentRating = parseInt(box.dataset.currentRating) || 0;
+    function updateStars() {
+      stars.forEach(star => {
+        const starValue = parseInt(star.dataset.star);
+        star.classList.toggle("fa-star", starValue <= currentRating);
+        star.classList.toggle("fa-star-o", starValue > currentRating);
+      });
+    }
+    stars.forEach(star => {
+      star.addEventListener("click", function () {
+        if (!universityData.loggedIn) {
+          console.log("Please log in to rate professors.");
+          return;
+        }
+        const selectedRating = parseInt(this.dataset.star);
+        submitRating(professorId, selectedRating).then(res => {
+          if (res) {
+            ratingId = res;
+            currentRating = selectedRating;
+            updateStars();
+            box.dataset.currentRating = currentRating;
+            box.dataset.ratingId = ratingId;
+          }
+        }).catch(error => {
+          console.error('Rating submission failed:', error);
+          alert('Failed to submit rating. Please try again.');
+        });
+      });
+    });
+
+    // Initialize on load
+    updateStars();
+  });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initStarRatings);
+} else {
+  initStarRatings();
+}
+class StarRating {
+  constructor() {
+    console.log("StarRating initialized");
+    initStarRatings();
+  }
+}
 
 /***/ }),
 

@@ -56,6 +56,13 @@ li {
   margin: 0;
 }
 
+.star-rating-box i {
+  font-size: 24px;
+  color: gold;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
 .min-list li {
   list-style: none;
 }

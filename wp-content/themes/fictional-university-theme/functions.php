@@ -1,8 +1,9 @@
 <?php
 require get_theme_file_path('/inc/like-route.php');
 require get_theme_file_path('/inc/search-route.php');
+require get_theme_file_path('/inc/rating-route.php');
 
-add_Action('rest_api_init', 'university_custom_rest');
+add_action('rest_api_init', 'university_custom_rest');
 function university_custom_rest() {
     register_rest_field('post', 'authorName', array(
         'get_callback'=> function(){return get_the_author();}
@@ -45,7 +46,12 @@ function Fictional_University_files() {
     wp_enqueue_style('Font-Awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     wp_enqueue_style('Fictional_University_main_styles', get_theme_file_uri('/build/style-index.css'));
     wp_enqueue_style('Fictional_University_extra_styles', get_theme_file_uri('/build/index.css'));
-
+    wp_enqueue_script('star-rating', get_template_directory_uri() . '/js/StarRating.js', array('jquery'), '1.0', true);
+    wp_localize_script('star-rating', 'universityData', array(
+      'root_url' => get_site_url(),
+      'nonce' => wp_create_nonce('wp_rest'),
+      'loggedIn' => is_user_logged_in()
+    ));
     wp_localize_script('main-university-js', 'universityData', array(
         'root_url' => get_site_url(),
         'nonce' => wp_create_nonce('wp_rest')

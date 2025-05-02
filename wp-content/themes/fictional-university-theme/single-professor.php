@@ -51,8 +51,20 @@
                 }
               }
 
+              $userRatingQuery = new WP_Query(array(
+                'post_type' => 'rating',
+                'author' => get_current_user_id(),
+                'meta_query' => array(
+                  array(
+                    'key' => 'professor_id', // Changed from 'rated_professor_id'
+                    'value' => get_the_ID(),
+                    'compare' => '='
+                  )
+                )
+              ));
               
-
+              $userRating = $userRatingQuery->found_posts ? get_post_meta($userRatingQuery->posts[0]->ID, 'rating', true) : 0; // Changed from 'star_rating'
+              $ratingId = $userRatingQuery->found_posts ? $userRatingQuery->posts[0]->ID : '';
             ?>
 
             <span class="like-box" data-like="<?php echo (isset($existQuery) && $existQuery->found_posts ? $existQuery->posts[0]->ID : ''); ?>" data-professor="<?php the_ID(); ?>" data-exists="<?php echo $existStatus; ?>">
@@ -61,8 +73,13 @@
               <span class="like-count"><?php echo $likeCount->found_posts; ?></span>
             </span>
             <?php the_content(); ?>
+            <div class="star-rating-box" data-rating-id="<?php echo esc_attr($ratingId); ?>" data-professor="<?php the_ID(); ?>" data-current-rating="<?php echo esc_attr($userRating); ?>">
+              <h2>Ratings</h2>
+              <?php for ($i = 1; $i <= 5; $i++): ?>
+              <i class="fa fa-star<?php echo ($i <= $userRating) ? '' : '-o'; ?>" data-star="<?php echo $i; ?>"></i>
+             <?php endfor; ?>
+             </div>
           </div>
-
         </div>
       </div>
 
